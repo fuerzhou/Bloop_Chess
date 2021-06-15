@@ -1755,8 +1755,9 @@ while not gameEnded:
     if isTransition:
         p,q = movingPiece.getpos()
         dx2,dy2 = destiny
-        n= 30.0
-        if abs(p-dx2)<=abs(step[0]//n) and abs(q-dy2)<=abs(step[1]//n):
+        n= 8.0
+        
+        if abs(p-dx2)<=abs(step[0]/n) and abs(q-dy2)<=abs(step[1]/n):
             #The moving piece has reached its destination:
             #Snap it back to its grid position:
             movingPiece.setpos((-1,-1))
