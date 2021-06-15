@@ -1,3 +1,8 @@
+#jo #jo is the start of the changes made by Jojo
+#jo the code itself has some bugs
+#jo 1. sometimes the pieces fly out of the window
+#jo 2. the sometimes the indice are not integers
+
 #    15-112: Principles of Programming and Computer Science
 #    Project: Chess Program
 #    Name      : Muhammad Nahin Khan
@@ -493,6 +498,7 @@ def isAttackedby(position,target_x,target_y,color):
         for y in range(8):
             if board[y][x]!=0 and board[y][x][1]==color:
                 listofAttackedSquares.extend(
+                    #jo is it important to know who attack the square? 
                     findPossibleSquares(position,x,y,True)) #The true argument
                 #prevents infinite recursion.
     #Check if the target square falls under the range of attack by the specified
@@ -514,7 +520,7 @@ def findPossibleSquares(position,x,y,AttackSearch=False):
     listofTuples = [] #Holds list of attacked squares.
 
     if piece == 'P': #The piece is a pawn.
-        if color=='w': #The piece is white
+        if color == 'w': #The piece is white
             if not isOccupied(board,x,y-1) and not AttackSearch:
                 #The piece immediately above is not occupied, append it.
                 listofTuples.append((x,y-1))
@@ -685,7 +691,7 @@ def findPossibleSquares(position,x,y,AttackSearch=False):
         for tupleq in listofTuples:
             x2 = tupleq[0]
             y2 = tupleq[1]
-            temp_pos = position.clone()
+            temp_pos = position.clone() 
             makemove(temp_pos,x,y,x2,y2)
             if not isCheck(temp_pos,color):
                 new_list.append(tupleq)
@@ -775,12 +781,73 @@ def makemove(position,x,y,x2,y2):
 
     #Since a move has been made, the other player
     #should be the 'side to move'
-    player = 1 - player    
+    #jo may need to move outside the function because of the random move
+    #jo player = 1 - player    
     #Update the position data:       
     position.setplayer(player)
     position.setCastleRights(castling_rights)
     position.setEnP(EnP_Target)
     position.setHMC(half_move_clock)
+
+#jo a new function makeRandomMove
+#jo copied from makemove(), and deleted the end position
+#jo make a random move one square next to the position
+def makeRandomMove(position,x,y):
+    #Get data from the position:
+    board = position.getboard()
+    piece = board[y][x][0]
+    color = board[y][x][1]
+    #Get the individual game components:
+    player = position.getplayer()
+    castling_rights = position.getCastleRights()
+    EnP_Target = position.getEnP()
+
+    #jo store the potential random moves
+    listofTuples = [] #Holds list of attacked squares.
+    listofTuples.extend( [(x,y-1),(x,y+1),(x+1,y),(x-1,y)] )
+
+    #jo Filter the possible potential moves
+    possible_random_moves = filterbyColor(board,listofTuples,color) 
+    #jo still need to make sure that king will not move to a space to be captured
+
+    #jo Randomly generate a direction
+    direction = random.choice( possible_random_moves ) 
+    
+    #Make the move:
+    board[direction[1]][direction[0]] = board[y][x] 
+    board[y][x] = 0
+
+    #Special piece requirements:
+    #Pawn:
+    if piece == 'P':
+        #If an en passant kill was made, the target enemy must die:
+        if EnP_Target == (x2,y2):
+            if color=='w':
+                board[y2+1][x2] = 0
+            else:
+                board[y2-1][x2] = 0
+        #If a pawn moved two steps, there is a potential en passant
+        #target. Otherise, there isn't. Update the variable:
+        #jo now consider the opposite: if the last move was two steps, it is not a potential en passant target anymore
+        if abs(y2-y)==2:
+            EnP_Target = (x,(y+y2)/2)
+        else:
+            EnP_Target = -1
+        #If a pawn moves towards the end of the board, it needs to 
+        #be promoted. Note that in this game a pawn is being promoted
+        #to a queen regardless of user choice.
+        if y2==0:
+            board[y][x] = 'Qw'
+        elif y2 == 7:
+            board[y][x] = 'Qb'
+
+    #Since a move has been made, the other player
+    #should be the 'side to move'
+    #jo may need to move outside the function because of the random move
+    #jo player = 1 - player    
+    #Update the position data:       
+    position.setplayer(player)
+    position.setEnP(EnP_Target)
 def opp(color):
     color = color[0]
     if color == 'w':
@@ -1554,7 +1621,7 @@ while not gameEnded:
             y = chess_coord[1]
             #If the piece clicked on is not occupied by your own piece,
             #ignore this mouse click:
-            if not isOccupiedby(board,x,y,'wb'[player]):
+            if not isOccupiedby(board,x,y,'wb'[player]): 
                 continue
             #Now we're sure the user is holding their mouse on a 
             #piecec that is theirs.
@@ -1630,19 +1697,26 @@ while not gameEnded:
                 
             #Make the move:
             makemove(position,x,y,x2,y2)
+            #Generate a random number to decide if make a random move
+            r = random.random()
+            if r < 0.3:
+                makeRandomMove(position,x2,y2)
             #Update this move to be the 'previous' move (latest move in fact), so that
             #yellow shades can be shown on it.
             prevMove = [x,y,x2,y2]
             #Update which player is next to play:
-            player = position.getplayer()
+    	    #jo update the player
+            player = 1-player
+            #jo player = position.getplayer()
             #Add the new position to the history for it:
             position.addtoHistory(position)
             #Check for possibilty of draw:
-            HMC = position.getHMC()
-            if HMC>=100 or isStalemate(position) or position.checkRepition():
-                #There is a draw:
-                isDraw = True
-                chessEnded = True
+            #jo a bug not integer index when playing e4
+            #HMC = position.getHMC()
+            #if HMC>=100 or isStalemate(position) or position.checkRepition():
+            #    #There is a draw:
+            #    isDraw = True
+            #    chessEnded = True
             #Check for possibilty of checkmate:
             if isCheckmate(position,'white'):
                 winner = 'b'
