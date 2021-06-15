@@ -218,7 +218,7 @@ class GamePosition:
         #Returns True if any of of the values in the history dictionary is greater than 3.
         #This would mean a position had been repeated at least thrice in order to reach the
         #current position in this game.
-        return any(value>=3 for value in self.history.itervalues())
+        return any(value>=3 for value in self.history.values())
     def addtoHistory(self,position):
         #Generate a unique key out of the current position:
         key = pos2key(position)
@@ -438,7 +438,7 @@ class Piece:
 # and so are difficult to protect.
 #
 # 
-##################################/////CHESS PROCESSING FUNCTIONS\\\\########################
+##################################/////CHESS PROCESSING FUNCTIONS//########################
 def drawText(board):
     for i in range(len(board)):
         for k in range(len(board[i])):
@@ -867,7 +867,7 @@ def pos2key(position):
     #Return the key:
     return key
 
-##############################////////GUI FUNCTIONS\\\\\\\\\\\\\#############################
+##############################////////GUI FUNCTIONS//////\#############################
 def chess_coord_to_pixels(chess_coord):
     x,y = chess_coord
     #There are two sets of coordinates that this function could choose to return.
@@ -890,7 +890,7 @@ def chess_coord_to_pixels(chess_coord):
     else:
         return ((7-x)*square_width, (7-y)*square_height)
 def pixel_coord_to_chess(pixel_coord):
-    x,y = pixel_coord[0]/square_width, pixel_coord[1]/square_height
+    x,y = pixel_coord[0]//square_width, pixel_coord[1]//square_height
     #See comments for chess_coord_to_pixels() for an explanation of the
     #conditions seen here:
     if isAI:
@@ -1034,7 +1034,7 @@ def drawBoard():
             #Specifc pixels:
             screen.blit(pieces_image,pos,subsection)
 
-###########################////////AI RELATED FUNCTIONS\\\\\\\\\\############################
+###########################////////AI RELATED FUNCTIONS/////############################
 
 def negamax(position,depth,alpha,beta,colorsign,bestMoveReturn,root=True):
     #First check if the position is already stored in the opening database dictionary:
@@ -1321,30 +1321,30 @@ screen = pygame.display.set_mode((600,600))
 
 #Load all the images:
 #Load the background chess board image:
-background = pygame.image.load('Media\\board.png').convert()
+background = pygame.image.load('Media/board.png').convert()
 #Load an image with all the pieces on it:
-pieces_image = pygame.image.load('Media\\Chess_Pieces_Sprite.png').convert_alpha()
-circle_image_green = pygame.image.load('Media\\green_circle_small.png').convert_alpha()
-circle_image_capture = pygame.image.load('Media\\green_circle_neg.png').convert_alpha()
-circle_image_red = pygame.image.load('Media\\red_circle_big.png').convert_alpha()
-greenbox_image = pygame.image.load('Media\\green_box.png').convert_alpha()
-circle_image_yellow = pygame.image.load('Media\\yellow_circle_big.png').convert_alpha()
-circle_image_green_big = pygame.image.load('Media\\green_circle_big.png').convert_alpha()
-yellowbox_image = pygame.image.load('Media\\yellow_box.png').convert_alpha()
+pieces_image = pygame.image.load('Media/Chess_Pieces_Sprite.png').convert_alpha()
+circle_image_green = pygame.image.load('Media/green_circle_small.png').convert_alpha()
+circle_image_capture = pygame.image.load('Media/green_circle_neg.png').convert_alpha()
+circle_image_red = pygame.image.load('Media/red_circle_big.png').convert_alpha()
+greenbox_image = pygame.image.load('Media/green_box.png').convert_alpha()
+circle_image_yellow = pygame.image.load('Media/yellow_circle_big.png').convert_alpha()
+circle_image_green_big = pygame.image.load('Media/green_circle_big.png').convert_alpha()
+yellowbox_image = pygame.image.load('Media/yellow_box.png').convert_alpha()
 #Menu pictures:
-withfriend_pic = pygame.image.load('Media\\withfriend.png').convert_alpha()
-withAI_pic = pygame.image.load('Media\\withAI.png').convert_alpha()
-playwhite_pic = pygame.image.load('Media\\playWhite.png').convert_alpha()
-playblack_pic = pygame.image.load('Media\\playBlack.png').convert_alpha()
-flipEnabled_pic = pygame.image.load('Media\\flipEnabled.png').convert_alpha()
-flipDisabled_pic = pygame.image.load('Media\\flipDisabled.png').convert_alpha()
+withfriend_pic = pygame.image.load('Media/withfriend.png').convert_alpha()
+withAI_pic = pygame.image.load('Media/withAI.png').convert_alpha()
+playwhite_pic = pygame.image.load('Media/playWhite.png').convert_alpha()
+playblack_pic = pygame.image.load('Media/playBlack.png').convert_alpha()
+flipEnabled_pic = pygame.image.load('Media/flipEnabled.png').convert_alpha()
+flipDisabled_pic = pygame.image.load('Media/flipDisabled.png').convert_alpha()
 
 #Getting sizes:
 #Get background size:
 size_of_bg = background.get_rect().size
 #Get size of the individual squares
-square_width = size_of_bg[0]/8
-square_height = size_of_bg[1]/8
+square_width = size_of_bg[0]//8
+square_height = size_of_bg[1]//8
 
 
 #Rescale the images so that each piece can fit in a square:
@@ -1682,7 +1682,7 @@ while not gameEnded:
         p,q = movingPiece.getpos()
         dx2,dy2 = destiny
         n= 30.0
-        if abs(p-dx2)<=abs(step[0]/n) and abs(q-dy2)<=abs(step[1]/n):
+        if abs(p-dx2)<=abs(step[0]//n) and abs(q-dy2)<=abs(step[1]//n):
             #The moving piece has reached its destination:
             #Snap it back to its grid position:
             movingPiece.setpos((-1,-1))
@@ -1693,7 +1693,7 @@ while not gameEnded:
             createShades([])
         else:
             #Move it closer to its destination.
-            movingPiece.setpos((p+step[0]/n,q+step[1]/n))
+            movingPiece.setpos((p+step[0]//n,q+step[1]//n))
     #If a piece is being dragged let the dragging piece follow the mouse:
     if isDown:
         m,k = pygame.mouse.get_pos()
