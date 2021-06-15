@@ -1616,7 +1616,7 @@ while not gameEnded:
         #isDown means a piece is being dragged.
         if not isDown and event.type == MOUSEBUTTONDOWN:
             #Mouse was pressed down.
-            #Get the oordinates of the mouse
+            #Get the coordinates of the mouse
             pos = pygame.mouse.get_pos()
             #convert to chess coordinates:
             chess_coord = pixel_coord_to_chess(pos)
@@ -1627,7 +1627,7 @@ while not gameEnded:
             if not isOccupiedby(board,x,y,'wb'[player]):
                 continue
             #Now we're sure the user is holding their mouse on a 
-            #piecec that is theirs.
+            #piece that is theirs.
             #Get reference to the piece that should be dragged around or selected:
             dragPiece = getPiece(chess_coord)
             #Find the possible squares that this piece could attack:
@@ -1727,7 +1727,7 @@ while not gameEnded:
             if isCheckmate(position,'black'):
                 winner = 'w'
                 chessEnded = True
-            #If the AI option was selecteed and the game still hasn't finished,
+            #If the AI option was selected and the game still hasn't finished,
             #let the AI start thinking about its next move:
             if isAI and not chessEnded:
                 if player==0:
