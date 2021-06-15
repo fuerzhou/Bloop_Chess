@@ -764,7 +764,7 @@ def makemove(position,x,y,x2,y2):
         #If a pawn moved two steps, there is a potential en passant
         #target. Otherise, there isn't. Update the variable:
         if abs(y2-y)==2:
-            EnP_Target = (x,(y+y2)/2)
+            EnP_Target = (x,(y+y2)//2)
         else:
             EnP_Target = -1
         #If a pawn moves towards the end of the board, it needs to 
@@ -830,7 +830,7 @@ def makeRandomMove(position,x,y):
         #target. Otherise, there isn't. Update the variable:
         #jo now consider the opposite: if the last move was two steps, it is not a potential en passant target anymore
         if abs(y2-y)==2:
-            EnP_Target = (x,(y+y2)/2)
+            EnP_Target = (x,(y+y2)//2)
         else:
             EnP_Target = -1
         #If a pawn moves towards the end of the board, it needs to 
@@ -1712,11 +1712,11 @@ while not gameEnded:
             position.addtoHistory(position)
             #Check for possibilty of draw:
             #jo a bug not integer index when playing e4
-            #HMC = position.getHMC()
-            #if HMC>=100 or isStalemate(position) or position.checkRepition():
-            #    #There is a draw:
-            #    isDraw = True
-            #    chessEnded = True
+            HMC = position.getHMC()
+            if HMC>=100 or isStalemate(position) or position.checkRepition():
+                #There is a draw:
+                isDraw = True
+                chessEnded = True
             #Check for possibilty of checkmate:
             if isCheckmate(position,'white'):
                 winner = 'b'
