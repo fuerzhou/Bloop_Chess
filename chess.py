@@ -1424,9 +1424,9 @@ prevMove = [-1,-1,-1,-1] #Also a global varible that stores the last move played
 ax,ay=0,0
 numm = 0
 #For showing the menu and keeping track of user choices:
-isMenu = True
-isAI = -1
-isFlip = -1
+isMenu = False
+isAI = False
+isFlip = False
 AIPlayer = -1
 #Finally, a variable to keep false until the user wants to quit:
 gameEnded = False
