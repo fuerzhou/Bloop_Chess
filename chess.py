@@ -1630,9 +1630,46 @@ while not gameEnded:
                 #Make sure it isn't already in there:
                 if [(x,y),(x2,y2)] not in openings[key]: 
                     openings[key].append([(x,y),(x2,y2)])
-                
-            #Make the move:
+
+            # Perform ice skate sliding move
+            pp('\n\n\n\n')
+            pp('        >>>>>>>>')
+            pType, pColour = tuple(board[y][x])
+            dx, dy = x2-x, y2-y
+            lookaheads = 0
+            while True:
+                # First move guaranteed OK because of in-built legality check
+                xRewind, yRewind = x + lookaheads * dx, y + lookaheads * dy
+                lookaheads += 1
+                x2, y2 = x + lookaheads * dx, y + lookaheads * dy
+                pp(f'lookaheads = {lookaheads}')
+                pp(f'(xRewind, yRewind) = {(xRewind, yRewind)}')
+                pp(f'(x2, y2) = {(x2, y2)}')
+                # If outside board, rewind to prev inside board move
+                onBoard = x2 in range(8) and y2 in range(8)
+                pp(f'(onBoard) = {onBoard}')
+                if not onBoard:
+                    x2, y2 = xRewind, yRewind
+                    break
+                # Handle hitting enemy
+                onEnemy = isOccupiedby(board, x2, y2, opp(pColour))
+                pp(f'(onEnemy) = {onEnemy}')
+                if onEnemy:
+                    # Allow only the original capture (ie lookaheads == 1)
+                    # Any enemies encountered later in slide are blocking
+                    if lookaheads != 1:
+                        x2, y2 = xRewind, yRewind
+                    break
+                # Rewind if we hit a friendly piece
+                onFriendly = isOccupiedby(board, x2, y2, pColour)
+                pp(f'(onFriendly) = {onFriendly}')
+                if onFriendly:
+                    x2, y2 = xRewind, yRewind
+                    break
+                pp('')
+            pp(f'Final move = {(x,y)} -> {(x2,y2)}')
             makemove(position,x,y,x2,y2)
+
             #Update this move to be the 'previous' move (latest move in fact), so that
             #yellow shades can be shown on it.
             prevMove = [x,y,x2,y2]
