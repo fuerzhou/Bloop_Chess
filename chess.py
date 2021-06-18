@@ -758,7 +758,7 @@ def makemove(position,x,y,x2,y2):
         #If a pawn moved two steps, there is a potential en passant
         #target. Otherise, there isn't. Update the variable:
         if abs(y2-y)==2:
-            EnP_Target = (x,(y+y2)/2)
+            EnP_Target = (x,(y+y2)//2)
         else:
             EnP_Target = -1
         #If a pawn moves towards the end of the board, it needs to 
@@ -1165,7 +1165,7 @@ def pieceSquareTable(flatboard,gamephase):
         #Adjust index if black piece, since piece sqaure tables
         #were designed for white:
         if color=='b':
-            i = (7-i/8)*8 + i%8
+            i = (7-i//8)*8 + i%8
             sign = -1
         #Adjust score:
         if piece=='P':
@@ -1682,7 +1682,7 @@ while not gameEnded:
         p,q = movingPiece.getpos()
         dx2,dy2 = destiny
         n= 30.0
-        if abs(p-dx2)<=abs(step[0]//n) and abs(q-dy2)<=abs(step[1]//n):
+        if abs(p-dx2)<=abs(step[0]/n) and abs(q-dy2)<=abs(step[1]/n):
             #The moving piece has reached its destination:
             #Snap it back to its grid position:
             movingPiece.setpos((-1,-1))
@@ -1693,7 +1693,7 @@ while not gameEnded:
             createShades([])
         else:
             #Move it closer to its destination.
-            movingPiece.setpos((p+step[0]//n,q+step[1]//n))
+            movingPiece.setpos((p+step[0]/n,q+step[1]/n))
     #If a piece is being dragged let the dragging piece follow the mouse:
     if isDown:
         m,k = pygame.mouse.get_pos()
