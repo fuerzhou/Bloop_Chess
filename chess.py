@@ -1636,6 +1636,10 @@ while not gameEnded:
             pp('        >>>>>>>>')
             pType, pColour = tuple(board[y][x])
             dx, dy = x2-x, y2-y
+            # Treat pawn initial double jump as single jump
+            # Prevents magical promotion by jumping over enemy pieces
+            if pType == 'P' and dx == 0 and abs(dy) == 2:
+                dx, dy = 0, dy // 2
             lookaheads = 0
             while True:
                 # First move guaranteed OK because of in-built legality check
