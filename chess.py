@@ -1,8 +1,3 @@
-#jo #jo is the start of the changes made by Jojo
-#jo the code itself has some bugs
-#jo 1. sometimes the pieces fly out of the window
-#jo 2. the sometimes the indice are not integers
-
 #    15-112: Principles of Programming and Computer Science
 #    Project: Chess Program
 #    Name      : Muhammad Nahin Khan
@@ -165,6 +160,9 @@ from collections import defaultdict #Used for giving dictionary values default d
 from collections import Counter #For counting elements in a list effieciently.
 import threading #To allow for AI to think simultaneously while the GUI is coloring the board.
 
+# Handy shortcut
+def pp(s, pre='CUST--------'):
+    print(pre, s)
 
 
 ########################################################
@@ -498,7 +496,6 @@ def isAttackedby(position,target_x,target_y,color):
         for y in range(8):
             if board[y][x]!=0 and board[y][x][1]==color:
                 listofAttackedSquares.extend(
-                    #jo is it important to know who attack the square? 
                     findPossibleSquares(position,x,y,True)) #The true argument
                 #prevents infinite recursion.
     #Check if the target square falls under the range of attack by the specified
@@ -520,7 +517,7 @@ def findPossibleSquares(position,x,y,AttackSearch=False):
     listofTuples = [] #Holds list of attacked squares.
 
     if piece == 'P': #The piece is a pawn.
-        if color == 'w': #The piece is white
+        if color=='w': #The piece is white
             if not isOccupied(board,x,y-1) and not AttackSearch:
                 #The piece immediately above is not occupied, append it.
                 listofTuples.append((x,y-1))
@@ -691,7 +688,7 @@ def findPossibleSquares(position,x,y,AttackSearch=False):
         for tupleq in listofTuples:
             x2 = tupleq[0]
             y2 = tupleq[1]
-            temp_pos = position.clone() 
+            temp_pos = position.clone()
             makemove(temp_pos,x,y,x2,y2)
             if not isCheck(temp_pos,color):
                 new_list.append(tupleq)
@@ -781,73 +778,12 @@ def makemove(position,x,y,x2,y2):
 
     #Since a move has been made, the other player
     #should be the 'side to move'
-    #jo may need to move outside the function because of the random move
-    #jo player = 1 - player    
+    player = 1 - player    
     #Update the position data:       
     position.setplayer(player)
     position.setCastleRights(castling_rights)
     position.setEnP(EnP_Target)
     position.setHMC(half_move_clock)
-
-#jo a new function makeRandomMove
-#jo copied from makemove(), and deleted the end position
-#jo make a random move one square next to the position
-def makeRandomMove(position,x,y):
-    #Get data from the position:
-    board = position.getboard()
-    piece = board[y][x][0]
-    color = board[y][x][1]
-    #Get the individual game components:
-    player = position.getplayer()
-    castling_rights = position.getCastleRights()
-    EnP_Target = position.getEnP()
-
-    #jo store the potential random moves
-    listofTuples = [] #Holds list of attacked squares.
-    listofTuples.extend( [(x,y-1),(x,y+1),(x+1,y),(x-1,y)] )
-
-    #jo Filter the possible potential moves
-    possible_random_moves = filterbyColor(board,listofTuples,color) 
-    #jo still need to make sure that king will not move to a space to be captured
-
-    #jo Randomly generate a direction
-    direction = random.choice( possible_random_moves ) 
-    
-    #Make the move:
-    board[direction[1]][direction[0]] = board[y][x] 
-    board[y][x] = 0
-
-    #Special piece requirements:
-    #Pawn:
-    if piece == 'P':
-        #If an en passant kill was made, the target enemy must die:
-        if EnP_Target == (x2,y2):
-            if color=='w':
-                board[y2+1][x2] = 0
-            else:
-                board[y2-1][x2] = 0
-        #If a pawn moved two steps, there is a potential en passant
-        #target. Otherise, there isn't. Update the variable:
-        #jo now consider the opposite: if the last move was two steps, it is not a potential en passant target anymore
-        if abs(y2-y)==2:
-            EnP_Target = (x,(y+y2)//2)
-        else:
-            EnP_Target = -1
-        #If a pawn moves towards the end of the board, it needs to 
-        #be promoted. Note that in this game a pawn is being promoted
-        #to a queen regardless of user choice.
-        if y2==0:
-            board[y][x] = 'Qw'
-        elif y2 == 7:
-            board[y][x] = 'Qb'
-
-    #Since a move has been made, the other player
-    #should be the 'side to move'
-    #jo may need to move outside the function because of the random move
-    #jo player = 1 - player    
-    #Update the position data:       
-    position.setplayer(player)
-    position.setEnP(EnP_Target)
 def opp(color):
     color = color[0]
     if color == 'w':
@@ -1232,7 +1168,7 @@ def pieceSquareTable(flatboard,gamephase):
         #Adjust index if black piece, since piece sqaure tables
         #were designed for white:
         if color=='b':
-            i = (7-i/8)*8 + i%8
+            i = (7-i//8)*8 + i%8
             sign = -1
         #Adjust score:
         if piece=='P':
@@ -1491,9 +1427,9 @@ prevMove = [-1,-1,-1,-1] #Also a global varible that stores the last move played
 ax,ay=0,0
 numm = 0
 #For showing the menu and keeping track of user choices:
-isMenu = True
-isAI = -1
-isFlip = -1
+isMenu = False
+isAI = False
+isFlip = False
 AIPlayer = -1
 #Finally, a variable to keep false until the user wants to quit:
 gameEnded = False
@@ -1613,7 +1549,7 @@ while not gameEnded:
         #isDown means a piece is being dragged.
         if not isDown and event.type == MOUSEBUTTONDOWN:
             #Mouse was pressed down.
-            #Get the coordinates of the mouse
+            #Get the oordinates of the mouse
             pos = pygame.mouse.get_pos()
             #convert to chess coordinates:
             chess_coord = pixel_coord_to_chess(pos)
@@ -1621,10 +1557,10 @@ while not gameEnded:
             y = chess_coord[1]
             #If the piece clicked on is not occupied by your own piece,
             #ignore this mouse click:
-            if not isOccupiedby(board,x,y,'wb'[player]): 
+            if not isOccupiedby(board,x,y,'wb'[player]):
                 continue
             #Now we're sure the user is holding their mouse on a 
-            #piece that is theirs.
+            #piecec that is theirs.
             #Get reference to the piece that should be dragged around or selected:
             dragPiece = getPiece(chess_coord)
             #Find the possible squares that this piece could attack:
@@ -1697,21 +1633,14 @@ while not gameEnded:
                 
             #Make the move:
             makemove(position,x,y,x2,y2)
-            #Generate a random number to decide if make a random move
-            r = random.random()
-            if r < 0.3:
-                makeRandomMove(position,x2,y2)
             #Update this move to be the 'previous' move (latest move in fact), so that
             #yellow shades can be shown on it.
             prevMove = [x,y,x2,y2]
             #Update which player is next to play:
-            #jo update the player
-            player = 1-player
-            #jo player = position.getplayer()
+            player = position.getplayer()
             #Add the new position to the history for it:
             position.addtoHistory(position)
             #Check for possibilty of draw:
-            #jo a bug not integer index when playing e4
             HMC = position.getHMC()
             if HMC>=100 or isStalemate(position) or position.checkRepition():
                 #There is a draw:
@@ -1724,7 +1653,7 @@ while not gameEnded:
             if isCheckmate(position,'black'):
                 winner = 'w'
                 chessEnded = True
-            #If the AI option was selected and the game still hasn't finished,
+            #If the AI option was selecteed and the game still hasn't finished,
             #let the AI start thinking about its next move:
             if isAI and not chessEnded:
                 if player==0:
@@ -1755,8 +1684,7 @@ while not gameEnded:
     if isTransition:
         p,q = movingPiece.getpos()
         dx2,dy2 = destiny
-        n= 8.0
-        
+        n= 10.0
         if abs(p-dx2)<=abs(step[0]/n) and abs(q-dy2)<=abs(step[1]/n):
             #The moving piece has reached its destination:
             #Snap it back to its grid position:
@@ -1768,7 +1696,7 @@ while not gameEnded:
             createShades([])
         else:
             #Move it closer to its destination.
-            movingPiece.setpos((p+step[0]//n,q+step[1]//n))
+            movingPiece.setpos((p+step[0]/n,q+step[1]/n))
     #If a piece is being dragged let the dragging piece follow the mouse:
     if isDown:
         m,k = pygame.mouse.get_pos()
