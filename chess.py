@@ -1316,6 +1316,12 @@ king_endgame_table = [-50,-40,-30,-20,-20,-30,-40,-50,
 -30,-30,  0,  0,  0,  0,-30,-30,
 -50,-30,-30,-30,-30,-30,-30,-50]
 
+MOORE_NEIGHBOURHOOD = [
+        (-1, -1), (0, -1), (1, -1),
+        (-1, 0), (0, 0), (1, 0),
+        (-1, 1), (0, 1), (1, 1),
+        ]
+
 #Make the GUI:
 #Start pygame
 pygame.init()
@@ -1630,9 +1636,19 @@ while not gameEnded:
                 #Make sure it isn't already in there:
                 if [(x,y),(x2,y2)] not in openings[key]: 
                     openings[key].append([(x,y),(x2,y2)])
-                
+
+            # Get all possible plays of chosen piece that also lie in Moore Neighbourhood of (x2, y2), and play one at random
+            pp('\n\n')
+            possibleSquares = listofTuples
+            pp(f'(possibleSquares) = {possibleSquares}')
+            mooreSquares = [ (sx, sy) for sx, sy in possibleSquares if (sx - x2, sy - y2) in MOORE_NEIGHBOURHOOD ]
+            pp(f'(mooreSquares) = {mooreSquares}')
+            x2, y2 = random.choice(mooreSquares)
+            pp(f'(x2, y2) = {x2, y2}')
+
             #Make the move:
             makemove(position,x,y,x2,y2)
+
             #Update this move to be the 'previous' move (latest move in fact), so that
             #yellow shades can be shown on it.
             prevMove = [x,y,x2,y2]
