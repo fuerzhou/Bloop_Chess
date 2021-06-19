@@ -1,7 +1,7 @@
 
-# {ENTER VARIANT NAME HERE}
+# Bloop Chess
 
-* {ENTER VARIANT RULES HERE}
+* Randomise every 3rd move
 
 ## Usage
 
