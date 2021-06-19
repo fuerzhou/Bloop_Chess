@@ -1,7 +1,14 @@
 
-# {ENTER VARIANT NAME HERE}
+# Ice Skate Chess
 
-* {ENTER VARIANT RULES HERE}
+* When moving to an empty square, pieces slide in the original movement direction until hitting another piece
+* Pieces behave normally when capturing
+* **--- TODO** clarify:
+  * Castling
+  * En passant
+  * King moving into check
+  * Pawns double jump into promotion (leapfrogging like knights)
+  * etc...
 
 ## Usage
 
