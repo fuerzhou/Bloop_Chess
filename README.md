@@ -1,7 +1,8 @@
 
-# {ENTER VARIANT NAME HERE}
+# Misclick Chess
 
-* {ENTER VARIANT RULES HERE}
+* Given the player's intended move, the engine chooses a random valid move within the [Moore Neighbourhood](https://mathworld.wolfram.com/MooreNeighborhood.html) of the target square
+* Simulates a player with shaky hands or bad mouse accuracy
 
 ## Usage
 
