@@ -1,4 +1,16 @@
 
+# Instructions for adding variants
+
+* Create new branch on `ancestor` tag
+* Add mod
+* Update `README.md`, pre-filled with template below
+
+&nbsp;  
+&nbsp;  
+&nbsp;  
+&nbsp;  
+
+
 # {ENTER VARIANT NAME HERE}
 
 * {ENTER VARIANT RULES HERE}
