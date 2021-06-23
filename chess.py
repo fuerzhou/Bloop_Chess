@@ -1453,7 +1453,7 @@ flipDisabled_pic = pygame.transform.scale(flipDisabled_pic,
 #Make a window of the same size as the background, set its title, and
 #load the background image onto it (the board):
 screen = pygame.display.set_mode(size_of_bg)
-pygame.display.set_caption('Shallow Green')
+pygame.display.set_caption('Bloop Chess')
 screen.blit(background,(0,0))
 
 #Generate a list of pieces that should be drawn on the board:
