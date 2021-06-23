@@ -1664,6 +1664,11 @@ while not gameEnded:
                     if lookaheads != 1:
                         x2, y2 = xRewind, yRewind
                     break
+                # Handle king moving into check
+                inCheck = pType == 'K' and isAttackedby(position, x2, y2, opp(pColour))
+                if inCheck:
+                    x2, y2 = xRewind, yRewind
+                    break
                 # Rewind if we hit a friendly piece
                 onFriendly = isOccupiedby(board, x2, y2, pColour)
                 pp(f'(onFriendly) = {onFriendly}')
